@@ -21,7 +21,11 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentTop="true"
         android:text="Button" />
-
+    <ImageView
+        android:id="@+id/image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/btn" />
     <TextView
         android:id="@+id/cookieShower"
         android:layout_width="match_parent"

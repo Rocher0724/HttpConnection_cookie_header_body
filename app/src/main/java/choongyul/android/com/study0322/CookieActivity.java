@@ -1,5 +1,7 @@
 package choongyul.android.com.study0322;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.v7.app.AppCompatActivity;
@@ -8,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,6 +33,7 @@ public class CookieActivity extends AppCompatActivity {
     Button btn;
     TextView cookieShower;
     Handler mHandler;
+    ImageView imageView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,6 +49,7 @@ public class CookieActivity extends AppCompatActivity {
 
         cookieShower = (TextView) findViewById(R.id.cookieShower);
         mHandler = new Handler(Looper.getMainLooper());
+        imageView = (ImageView) findViewById(R.id.image);
     }
 
     private void doNetwork() {
@@ -79,6 +84,13 @@ public class CookieActivity extends AppCompatActivity {
                 con.setDoInput(true);
 
                 con.connect();
+                final Bitmap bitmap = BitmapFactory.decodeStream(con.getInputStream());
+                imageView.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        imageView.setImageBitmap(bitmap);
+                    }
+                });
                 con.getHeaderFields().keySet().iterator();
                 for( String s : con.getHeaderFields().keySet() ) {
                     Log.e(s, con.getHeaderFields().get(s).toString());
@@ -121,31 +133,32 @@ public class CookieActivity extends AppCompatActivity {
                 con.disconnect();
                 return;
             }
+// 비트맵 펙토리에 디코드 스트림을 이미지로 바꿀수 있는 게 있다. (디코드스트림?)
 
-            BufferedInputStream bfis = null;
-            BufferedReader bfReader = null;
-            try {
-                byte[] buffer = new byte[30];
-                bfReader = new BufferedReader(new InputStreamReader(con.getInputStream(),"UTF-8"));
-                bfis = new BufferedInputStream(con.getInputStream(),30);
-                String line = null;
-                int line1 = 0;
-                while( (line1 = bfis.read(buffer)) != -1){
-                    StringBuffer sb = new StringBuffer();
-                    for(byte a : buffer){
-                        sb.append(a);
-                    }
-                    Log.e("Body", sb.toString());
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+//            BufferedInputStream bfis = null;
+//            BufferedReader bfReader = null;
+//            try {
+//                byte[] buffer = new byte[30];
+//                bfReader = new BufferedReader(new InputStreamReader(con.getInputStream(),"UTF-8"));
+//                bfis = new BufferedInputStream(con.getInputStream(),30);
+//                String line = null;
+//                int line1 = 0;
+//                while( (line1 = bfis.read(buffer)) != -1){
+//                    StringBuffer sb = new StringBuffer();
+//                    for(byte a : buffer){
+//                        sb.append(a);
+//                    }
+//                    Log.e("Body", sb.toString());
+//                }
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
 
 
             CookieStore cStore = cMan.getCookieStore();
             final List<HttpCookie> cookies = cStore.getCookies();
             StringBuffer sBuffer = new StringBuffer();
-            for(HttpCookie c : cookies){
+            for(HttpCookie c : cookies){ // 쿠키는 스트링 리스트로 온다.
                 Log.w("COOKIE",c.toString());
                 sBuffer.append(c.toString());
             }

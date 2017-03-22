@@ -15,7 +15,7 @@ import java.util.Map;
 /**
  * Created by DoDo on 2017-03-22.
  */
-
+// 레퍼런스랑 같이 보면 좋다. 레퍼런스에 있는거 쪼금만 수정했음.
 public class GsonRequest<T> extends Request<T> {
     private final Gson gson = new Gson();
     private final Class<T> clazz;
